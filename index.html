@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEV.CORE | High Performance Portfolio</title>
+    
+    <!-- Fonts: Space Grotesk for headings, VT323 for code vibes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            /* 60% Dominant - Deep Void Blue */
+            --bg-color: #020514;
+            /* 30% Secondary - Electric Blue (Logo Match) */
+            --primary-blue: #0011ff;
+            /* 10% Accent - Acid Lime for Funkiness */
+            --accent-color: #ccff00;
+            
+            --text-white: #f0f0f0;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border-width: 3px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Custom cursor setup */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-color);
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s;
+            mix-blend-mode: difference;
+        }
+        .cursor.hovered {
+            background-color: var(--accent-color);
+            width: 50px;
+            height: 50px;
+            opacity: 0.5;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 0.9;
+        }
+        
+        .funky-text {
+            font-family: 'VT323', monospace;
+            color: var(--accent-color);
+        }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: transparent;
+            border: var(--border-width) solid var(--accent-color);
+            color: var(--accent-color);
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            text-decoration: none;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 5px 5px 0px var(--primary-blue);
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 10px 10px 0px var(--primary-blue);
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        /* --- BACKGROUND NOISE --- */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)" opacity="0.05"/%3E%3C/svg%3E');
+            z-index: 9998;
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            background: rgba(2, 5, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: -1px;
+        }
+
+        .logo-text span { color: var(--primary-blue); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 8vw, 6rem); /* Responsive Font */
+            margin-bottom: 20px;
+        }
+
+        .hero-content h1 .outline {
+            -webkit-text-stroke: 2px var(--primary-blue);
+            color: transparent;
+        }
+
+        .hero-img-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-img {
+            width: 300px; /* Adjust based on your logo */
+            image-rendering: pixelated; /* Keeps the retro look sharp */
+            filter: drop-shadow(10px 10px 0px var(--primary-blue));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* --- MARQUEE (SCROLLING TEXT) --- */
+        .marquee-container {
+            background: var(--primary-blue);
+            padding: 15px 0;
+            transform: rotate(-2deg) scale(1.05);
+            margin: 50px 0;
+            border-top: 3px solid var(--text-white);
+            border-bottom: 3px solid var(--text-white);
+            overflow: hidden;
+        }
+
+        .marquee-content {
+            display: flex;
+            gap: 50px;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+        }
+
+        .marquee-item {
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--text-white);
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- PERFORMANCE / SKILLS --- */
+        .skills-section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 4rem;
+            margin-bottom: 60px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: -20px;
+            width: 50px;
+            height: 10px;
+            background: var(--accent-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--primary-blue);
+            padding: 30px;
+            position: relative;
+            transition: 0.3s;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            background: var(--primary-blue);
+            color: var(--text-white);
+            transform: translateY(-10px);
+        }
+
+        .stat-card::before {
+            content: '//';
+            font-family: 'VT323';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 10px;
+            background: #000;
+            margin-top: 15px;
+            border: 1px solid #fff;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 1.5s ease-out;
+        }
+
+        /* --- PROJECTS --- */
+        .projects-section {
+            padding: 100px 0;
+        }
+
+        .project-card {
+            border: 3px solid var(--text-white);
+            margin-bottom: 80px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            background: var(--bg-color);
+        }
+
+        .project-visual {
+            background: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            font-size: 5rem;
+            font-weight: bold;
+            color: rgba(0,0,0,0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .project-visual::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.1) 10px,
+                rgba(0,0,0,0.1) 20px
+            );
+        }
+
+        .project-info {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .project-tags span {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 10px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-family: 'VT323';
+            font-size: 1.1rem;
+        }
+
+        /* --- CONTACT --- */
+        .contact-section {
+            padding: 100px 0;
+            text-align: center;
+            background: var(--primary-blue);
+            color: var(--text-white);
+            position: relative;
+            clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .big-email {
+            font-size: clamp(2rem, 6vw, 5rem);
+            color: var(--bg-color);
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin: 40px 0;
+            transition: 0.3s;
+        }
+
+        .big-email:hover {
+            color: var(--accent-color);
+            text-shadow: 4px 4px 0px #000;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-img-container {
+                order: -1;
+                margin-bottom: 30px;
+            }
+            .project-card {
+                grid-template-columns: 1fr;
+            }
+            .marquee-container {
+                transform: rotate(0deg);
+            }
+        }
+        
+        /* Helper for scroll animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body>
+<div id="preloader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; font-family:'VT323'; color:var(--accent-color); font-size:1.5rem;">
+    <div id="loader-text">INITIALIZING CORE SYSTEMS...</div>
+    <div style="width:300px; height:5px; background:#333; margin-top:20px;">
+        <div id="loader-bar" style="width:0%; height:100%; background:var(--accent-color); transition:width 0.5s;"></div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', () => {
+        const bar = document.getElementById('loader-bar');
+        const text = document.getElementById('loader-text');
+        const preloader = document.getElementById('preloader');
+        
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 10;
+            if (progress > 100) progress = 100;
+            bar.style.width = progress + '%';
+            if (progress > 30) text.innerText = "LOADING ASSETS...";
+            if (progress > 70) text.innerText = "OPTIMIZING PERFORMANCE...";
+            
+            if (progress === 100) {
+                clearInterval(interval);
+                text.innerText = "SYSTEM READY.";
+                setTimeout(() => {
+                    preloader.style.opacity = '0';
+                    preloader.style.pointerEvents = 'none';
+                }, 500);
+            }
+        }, 100);
+    });
+</script>
+    <div class="cursor"></div>
+    <div class="noise"></div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo-text">KARRAR<span>.NAZIM</span></div>
+                <a href="#contact" class="funky-text" style="color:white; font-size: 1rem;">[ INITIALIZE_CHAT ]</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <p class="funky-text">> System Status: ONLINE</p>
+                <h1>
+                    <span class="outline">CODE</span><br>
+                    ARCHITECT<br>
+                    <span style="color: var(--primary-blue)">UNLEASHED</span>
+                </h1>
+                <p style="margin-bottom: 30px; max-width: 500px;">
+                    I build pixel-perfect, high-performance digital experiences. 
+                    My code isn't just clean; it's optimized for raw power.
+                </p>
+                <a href="#projects" class="btn">VIEW_LOGS</a>
+            </div>
+            <div class="hero-img-container">
+                <!-- REPLACE 'logo.png' with your actual image file name -->
+                <img src="icon-512x512.png" alt="Pixel Avatar" class="hero-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- SCROLLING MARQUEE -->
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <div class="marquee-item">HIGH PERFORMANCE CODE +++ PIXEL PERFECT DESIGN +++ FULL STACK DEVELOPMENT +++ </div>
+            <div class="marquee-item">HIGH PERFORMANCE CODE +++ PIXEL PERFECT DESIGN +++ FULL STACK DEVELOPMENT +++ </div>
+        </div>
+    </div>
+
+    <section class="skills-section" id="skills">
+        <div class="container">
+            <h2 class="section-title reveal">SYSTEM SPECS</h2>
+            
+            <div class="stats-grid">
+                <!-- Skill 1 -->
+                <div class="stat-card reveal">
+                    <h3>FRONTEND ARCHITECTURE</h3>
+                    <p class="funky-text">React / Vue / ThreeJS</p>
+                    <div class="bar-container"><div class="bar-fill" data-width="95%"></div></div>
+                </div>
+
+                <!-- Skill 2 -->
+                <div class="stat-card reveal">
+                    <h3>BACKEND LOGIC</h3>
+                    <p class="funky-text">Node / Python / SQL</p>
+                    <div class="bar-container"><div class="bar-fill" data-width="90%"></div></div>
+                </div>
+
+                <!-- Skill 3 -->
+                <div class="stat-card reveal">
+                    <h3>PERFORMANCE TUNING</h3>
+                    <p class="funky-text">SEO / Optimization / Caching</p>
+                    <div class="bar-container"><div class="bar-fill" data-width="98%"></div></div>
+                </div>
+
+                <!-- Skill 4 -->
+                <div class="stat-card reveal">
+                    <h3>CREATIVE DEV</h3>
+                    <p class="funky-text">Animations / Canvas / UI</p>
+                    <div class="bar-container"><div class="bar-fill" data-width="85%"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects-section" id="projects">
+        <div class="container">
+            <h2 class="section-title reveal" style="margin-bottom: 80px;">MISSION LOGS</h2>
+
+            <!-- Project 1 -->
+            <div class="project-card reveal">
+                <div class="project-visual">
+                    01
+                </div>
+                <div class="project-info">
+                    <h3>NEON COMMERCE</h3>
+                    <p class="funky-text" style="margin-bottom: 20px;">> e-commerce platform</p>
+                    <p style="margin-bottom: 20px;">A high-load shopping platform built for speed. Optimized rendering cycles reduced load time by 40%.</p>
+                    <div class="project-tags">
+                        <span>REACT</span><span>NODE.JS</span><span>REDIS</span>
+                    </div>
+                    <br>
+                    <a href="#" style="color: var(--primary-blue); font-weight: bold; text-decoration: none;">[ EXECUTE_DEMO ]</a>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card reveal">
+                <div class="project-visual" style="background: var(--accent-color); color: var(--bg-color);">
+                    02
+                </div>
+                <div class="project-info">
+                    <h3>DATA VISUALIZER</h3>
+                    <p class="funky-text" style="margin-bottom: 20px;">> analytics dashboard</p>
+                    <p style="margin-bottom: 20px;">Real-time data processing interface. Handles thousands of requests per second with zero lag.</p>
+                    <div class="project-tags">
+                        <span>D3.JS</span><span>PYTHON</span><span>SOCKET.IO</span>
+                    </div>
+                    <br>
+                    <a href="#" style="color: var(--primary-blue); font-weight: bold; text-decoration: none;">[ EXECUTE_DEMO ]</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <div class="container reveal">
+            <p class="funky-text" style="font-size: 1.5rem;">READY TO UPGRADE?</p>
+            <h2 style="font-size: 3rem;">ESTABLISH CONNECTION</h2>
+            
+            <a href="mailto:hello@example.com" class="big-email">HELLO@DEV.CORE</a>
+            
+            <div style="margin-top: 50px; display: flex; justify-content: center; gap: 30px;">
+                <a href="#" class="btn" style="border-color: var(--bg-color); color: var(--bg-color);">GITHUB</a>
+                <a href="#" class="btn" style="border-color: var(--bg-color); color: var(--bg-color);">LINKEDIN</a>
+            </div>
+            
+            <footer style="margin-top: 80px; font-size: 0.8rem; opacity: 0.7;">
+                © 2024 DEV.CORE SYSTEM | ALL RIGHTS RESERVED
+            </footer>
+        </div>
+    </section>
+
+    <script>
+        // --- CUSTOM CURSOR ---
+        const cursor = document.querySelector('.cursor');
+        const links = document.querySelectorAll('a, .stat-card, .project-card');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            link.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- SCROLL ANIMATIONS ---
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Trigger Bar Animation if it's a stats card
+                    if (entry.target.classList.contains('stat-card')) {
+                        const bar = entry.target.querySelector('.bar-fill');
+                        const width = bar.getAttribute('data-width');
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 200);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // --- SIMPLE PARALLAX ON HERO IMAGE ---
+        document.addEventListener('mousemove', (e) => {
+            const img = document.querySelector('.hero-img');
+            const x = (window.innerWidth - e.pageX * 2) / 100;
+            const y = (window.innerHeight - e.pageY * 2) / 100;
+            
+            img.style.transform = `translateX(${x}px) translateY(${y}px)`;
+        });
+
+    </script>
+</body>
+</html>
