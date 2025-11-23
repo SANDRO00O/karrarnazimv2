@@ -1,6 +1,6 @@
 <?php
 session_start();
-$password = ""; // <--- غير كلمة المرور هنا
+$password = "123"; // <--- غير كلمة المرور هنا
 
 // 1. تسجيل الدخول
 if (isset($_POST['login'])) {
