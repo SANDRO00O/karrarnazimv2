@@ -332,7 +332,36 @@ $btn_labels = ['EXECUTE', 'READ_FILE', 'VIEW_SOURCE', 'OPEN_LOG', 'RUN_SCRIPT', 
 
         .post-card:hover .read-btn::after { transform: translateX(5px); color: var(--accent-color); }
 
-        .post-card:hover .read-btn { color: var(--accent-color); }
+   
+            /* Navigation styles */
+    nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+    }
+    nav a {
+        color: var(--white);
+        text-decoration: none;
+    }
+    .burger {
+        display: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--white);
+    }
+    @media (max-width: 768px) {
+        nav ul {
+            flex-direction: column;
+            display: none;
+            width: 100%;
+        }
+        nav ul.show {
+            display: flex;
+        }
+        .burger {
+            display: block;
+        }
+    }.post-card:hover .read-btn { color: var(--accent-color); }
 
         /* --- FEATURED POST (Wide) --- */
 
@@ -371,22 +400,27 @@ $btn_labels = ['EXECUTE', 'READ_FILE', 'VIEW_SOURCE', 'OPEN_LOG', 'RUN_SCRIPT', 
             <nav>
 
                 <div class="logo-text"><a href="index.html">DEV<span>.CORE</span></a></div>
+                            <div class="burger" onclick="toggleMenu()">&#x2630;</div>
 
-                <ul>
-
-                    <li><a href="index.html">HOME</a></li>
-
-                    <li><a href="blog.php" class="active">LOGS</a></li>
-
-                    <li><a href="admin.php" style="color:var(--accent-color)">[ ADMIN ]</a></li>
-
-                </ul>
+               
+                              <ul id="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="blog.php" class="active">LOGS</a></li>
+                <li><a href="admin.php">ADMIN</a></li>
+            </ul>>
 
             </nav>
 
         </div>
 
     </header>
+
+        <script>
+    function toggleMenu() {
+      var navLinks = document.getElementById('nav-links');
+      navLinks.classList.toggle('show');
+    }
+    </script>
 
     <div class="container">
 

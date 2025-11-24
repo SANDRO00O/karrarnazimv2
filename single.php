@@ -160,7 +160,36 @@ if (!$post) {
         }
 
         /* --- FOOTER AREA --- */
-        .post-footer { margin-top: 80px; padding-top: 40px; border-top: 1px solid #333; text-align: center; }
+     /* Navigation styles */
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+nav a {
+    color: var(--white);
+    text-decoration: none;
+}
+.burger {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--white);
+}
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        display: none;
+        width: 100%;
+    }
+    nav ul.show {
+        display: flex;
+    }
+    .burger {
+        display: block;
+    }
+}
+   .post-footer { margin-top: 80px; padding-top: 40px; border-top: 1px solid #333; text-align: center; }
         .glitch-btn {
             display: inline-block; padding: 15px 40px;
             border: 2px solid var(--accent-color);
@@ -184,13 +213,24 @@ if (!$post) {
     <div class="cursor"></div>
 
     <header>
-        <div class="container">
-            <nav>
-                <div style="font-family:'VT323'; font-size:1.2rem;">// READING_MODE</div>
-                <a href="blog.php" class="back-btn">&lt; RETURN_TO_LOGS</a>
-            </nav>
-        </div>
-    </header>
+    <div class="container">
+        <nav>
+            <div class="logo-text"><a href="index.html">DEV<span>.CORE</span></a></div>
+            <div class="burger" onclick="toggleMenu()">&#x2630;</div>
+            <ul id="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="blog.php" class="active">LOGS</a></li>
+                <li><a href="admin.php">ADMIN</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<script>
+function toggleMenu() {
+    var navLinks = document.getElementById('nav-links');
+    navLinks.classList.toggle('show');
+}
+
 
     <main class="container">
         <!-- HEADER -->
